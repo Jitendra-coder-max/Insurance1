@@ -1,0 +1,399 @@
+swagger: "2.0"
+info:
+  title: MAX Life insurance API
+  description: This is my company API Documentation
+  version: 1.0
+  contact:
+    email: jitendra@example.com
+  liscence:
+    name: ISC
+    url: "https://www.isc.org/licenses/"
+  servers:
+    -url: http://localhost:5000
+    description: THis is my local Server
+      
+schemes: [http,https]
+securityDefinitions:
+  Bearer:
+    type: apiKey
+    name: Authorization
+    in: header
+    description: >-
+      Enter the token with the `Bearer: ` prefix, e.g. "Bearer abcde12345".
+
+paths:
+  /string:
+    get:
+      summary: Returns a string.
+      description: String Chechup
+      responses:
+        200:     
+          description: Successul 
+             schema: 
+                 type: string
+                 example: "Users String"
+
+        400:        
+          description: User Error
+            schema: 
+                type: string
+                example: "Some Error "         
+
+    
+
+  /api/users:
+    post:
+       summary: add new user
+       produces:
+        - application/json
+       consumes:
+        - application/json
+       parameters:
+        - in: body
+          name: body
+          schema:
+            type: object
+            required:
+              - name
+              - email
+              - password
+            properties:
+              name:
+                type: string
+              email:
+                type: string
+              password:
+                type: string
+       responses:
+            200:
+              description: OK
+
+  
+  
+  
+  /api/users/login:       
+      post:
+       summary: Login
+       produces:
+        - application/json
+       consumes:
+        - application/json
+       parameters:
+        - in: body
+          name: body
+          schema:
+            type: object
+            required:
+              - email
+              - password
+            properties:
+              email:
+                type: string
+              password:
+                type: string
+       responses:
+            200:
+              description: OK
+
+  /api/users/profile:
+    get:
+      summary: Returns the user profile
+      description: Returns the Specific User
+      security:
+        - Bearer: []
+      responses:
+        '200':
+          description: 'Will send `Authenticated`'
+        '403': 
+          description: 'You do not have necessary permissions for the resource' 
+
+    put:
+     summary: update user
+     description: It will update the user by their id and password
+     produces:
+        - application/json
+     consumes:
+        - application/json
+     security:
+        - Bearer: [] 
+     parameters:
+        - in: body
+          name: body
+          schema:
+            type: object
+            required:
+              - name
+              - email
+              - password
+            properties:
+              name:
+                type: string
+              email:
+                type: string
+              password:
+                type: string
+     responses: 
+          200:
+            description: OK
+              schema:
+                  type: object
+                  example: {name: Jitendra}         
+
+  /api/users/{id}:
+     get:
+      summary: Returns a user by ID.
+      description: Returns the Specific User
+      security:
+        - Bearer: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type : integer
+            format: int64
+      responses: 
+        200:
+          description: OK
+          schema:
+            type: object
+            example: {name: Jitedra }
+     put:
+      summary: update user
+      description: It will update the user by their id and password
+      produces:
+        - application/json
+      consumes:
+        - application/json
+      security:
+        - Bearer: [] 
+      parameters:
+         - name: id
+           in: path
+           required: true
+           schema:
+              type: integer
+         - in: body  
+           name: body
+           desription: update the user name by id
+           required:
+              - name
+              - email
+              - isAdmin
+           properties:
+                name:
+                  type: string
+                email:
+                  type: string
+                isAdmin:
+                  type: string
+      responses: 
+          200:
+            description: OK
+            schema:
+                type: object
+                example: {name: Jitendra}  
+
+     delete:
+       summary: Delete user by ID
+       parameters:
+        - name: id
+          in: path
+          description: ID of the user to delete
+          required: true
+          schema:
+            type: integer
+       security:
+        - Bearer: []      
+       responses:
+          200:
+            description: user deleted successfully
+          400:
+            description: Invalid request
+          404:
+            description: user not found
+
+  /api/products:
+    get:
+      summary: Returns a list of products.
+      description: list of policies of life insurance
+      responses:
+        200:    # status code
+          description: Successul Response
+          schema: 
+            type: array
+            items: 
+              type: object
+              properties:
+                id:
+                  type: integer
+                name:
+                  type: string
+                price:
+                  type: integer 
+                cover:
+                  type: string
+                description:
+                  type: string
+                cover:
+                 type: string
+                term:
+                  type: string  
+    post:
+       summary: update the product scheme
+       produces:
+        - application/json
+       consumes:
+        - application/json
+       security:
+        - Bearer: [] 
+       parameters:
+        - in: body
+          name: body
+          schema:
+            type: object
+            required:
+              - name
+              - price
+              - cover
+              - term
+              - description
+            properties:
+              name:
+                type: string
+              price:
+                type: integer
+              cover:
+                type: string
+              term:
+                type: string
+              description:
+                type: string      
+       responses:
+            200:
+              description: OK
+
+
+  /api/products/{id}:            
+    get:
+      summary: Returns a product policy.
+      description: Returns the Specific insurance policy.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type : integer
+            format: int64
+      responses: 
+        '200':
+          description: OK
+          schema:
+            type: object
+            example: {name: Business}  
+            # properties:
+            #     id:
+            #       type: integer
+            #     name:
+            #       type: string
+            #     price:
+            #       type: integer 
+            #     cover:
+            #       type: string
+            #     description:
+            #       type: string
+            #     cover:
+            #      type: string
+            #     term:
+            #       type: string  
+
+    put:
+      summary: update the policy product
+      description: It will update the policy description
+      produces:
+        - application/json
+      consumes:
+        - application/json
+      security:
+        - Bearer: [] 
+      parameters:
+         - name: id
+           in: path
+           required: true
+           schema:
+              type: integer
+         - in: body  
+           name: body
+           desription: update the user name by id
+           required:
+              - name
+              - price
+              - description
+              - cover
+              - term
+           properties:
+              name:
+                type: string
+              price:
+                type: integer
+              cover:
+                type: string
+              term:
+                type: string
+              description:
+                type: string   
+      responses: 
+          200:
+            description: OK
+            schema:
+                type: object
+                example: {name: Jitendra} 
+
+    delete:
+       summary: Delete user policies  by ID
+       parameters:
+        - name: id
+          in: path
+          description: ID of the user policy products to delete
+          required: true
+          schema:
+            type: integer
+       security:
+        - Bearer: []      
+       responses:
+          200:
+            description: policy deleted successfully
+          400:
+            description: Invalid request
+          404:
+            description: policy not found                     
+                  
+  /api/products/top:
+    get:
+      summary: Returns a list of top rated.
+      description: list of top policies of life insurance
+      responses:
+        200:    # status code
+          description: Successul Response
+          schema: 
+            type: array
+            items: 
+              type: object
+              properties:
+                id:
+                  type: integer
+                name:
+                  type: string
+                price:
+                  type: integer 
+                cover:
+                  type: string
+                description:
+                  type: string
+                cover:
+                 type: string
+                term:
+                  type: string
+  
+
+  
